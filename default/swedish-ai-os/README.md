@@ -91,6 +91,20 @@ Compose equivalent:
 docker compose run --rm swedish-ai-os respond "Skriv exakt: Docker fungerar."
 ```
 
+Makefile shortcuts:
+```bash
+make env
+make build
+make run PROMPT="Svara pa svenska: hej"
+make voice AUDIO_IN=input.wav AUDIO_OUT=output.wav
+make smoke
+```
+
+See all targets:
+```bash
+make help
+```
+
 ## 6) Optional OS localization
 
 ```bash
