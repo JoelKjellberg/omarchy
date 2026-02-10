@@ -5,7 +5,7 @@ PROMPT ?= Svara pa svenska: hej
 AUDIO_IN ?= input.wav
 AUDIO_OUT ?= output.wav
 
-.PHONY: help env check-env check-audio build run respond transcribe voice smoke compose-run compose-voice
+.PHONY: help env check-env check-openai-key check-audio build run respond transcribe voice smoke test-docker compose-run compose-voice
 
 help:
 	@echo "Targets:"
@@ -15,6 +15,7 @@ help:
 	@echo "  make transcribe     # Transcribe AUDIO_IN to stdout"
 	@echo "  make voice          # ASR -> LLM -> TTS to AUDIO_OUT"
 	@echo "  make smoke          # Quick OpenAI smoke prompt"
+	@echo "  make test-docker    # Validate .env and run a live container smoke test"
 	@echo "  make compose-run    # docker compose text response"
 	@echo "  make compose-voice  # docker compose full voice pipeline"
 	@echo "Variables: IMAGE ENV_FILE PROMPT AUDIO_IN AUDIO_OUT"
@@ -31,6 +32,16 @@ env:
 check-env:
 	@if [[ ! -f $(ENV_FILE) ]]; then \
 		echo "Missing $(ENV_FILE). Run: make env" >&2; \
+		exit 1; \
+	fi
+
+check-openai-key: check-env
+	@if ! grep -q '^OPENAI_API_KEY=' $(ENV_FILE); then \
+		echo "OPENAI_API_KEY is missing in $(ENV_FILE)." >&2; \
+		exit 1; \
+	fi
+	@if grep -Eq '^OPENAI_API_KEY=$$' $(ENV_FILE); then \
+		echo "OPENAI_API_KEY is empty in $(ENV_FILE)." >&2; \
 		exit 1; \
 	fi
 
@@ -58,6 +69,12 @@ voice: check-env check-audio
 
 smoke: check-env
 	docker run --rm --env-file $(ENV_FILE) $(IMAGE) respond "Skriv exakt: Docker fungerar."
+
+test-docker: check-openai-key
+	@command -v docker >/dev/null 2>&1 || { echo "Docker is not installed or not in PATH." >&2; exit 1; }
+	@docker info >/dev/null 2>&1 || { echo "Docker daemon is not reachable." >&2; exit 1; }
+	docker run --rm --env-file $(ENV_FILE) $(IMAGE) respond "Skriv exakt: Docker test fungerar."
+	@echo "Docker test passed."
 
 compose-run: check-env
 	docker compose run --rm swedish-ai-os respond "$(PROMPT)"

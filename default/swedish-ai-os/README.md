@@ -98,7 +98,10 @@ make build
 make run PROMPT="Svara pa svenska: hej"
 make voice AUDIO_IN=input.wav AUDIO_OUT=output.wav
 make smoke
+make test-docker
 ```
+
+`make test-docker` validates `.env` and performs a live OpenAI container call.
 
 See all targets:
 ```bash
