@@ -1,0 +1,8 @@
+openai>=1.60.0
+python-dotenv>=1.0.0
+requests>=2.32.0
+
+# Optional local Swedish ASR stack
+# accelerate>=0.34.0
+# torch>=2.4.0
+# transformers>=4.45.0

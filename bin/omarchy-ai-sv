@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SWEDISH_AI_PATH="${OMARCHY_SWEDISH_AI_DIR:-$HOME/.local/share/swedish-ai-os}"
+BINARY_PATH="$SWEDISH_AI_PATH/.venv/bin/sv-ai-os"
+ENV_PATH="$SWEDISH_AI_PATH/.env"
+
+if [[ ! -x $BINARY_PATH ]]; then
+  echo "Swedish AI stack is not installed. Re-run installer with OMARCHY_SWEDISH_AI_OPENAI=true." >&2
+  exit 1
+fi
+
+if [[ ! -f $ENV_PATH ]]; then
+  echo "Missing env file: $ENV_PATH. Run $SWEDISH_AI_PATH/scripts/use_openai_stack.sh first." >&2
+  exit 1
+fi
+
+"$BINARY_PATH" --env-file "$ENV_PATH" "$@"

@@ -1,0 +1,7 @@
+.venv
+__pycache__
+*.pyc
+.env
+.git
+src/swedish_ai_os.egg-info
+assistant-response.wav

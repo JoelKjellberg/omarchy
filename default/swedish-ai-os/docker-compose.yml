@@ -1,0 +1,15 @@
+services:
+  swedish-ai-os:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: swedish-ai-os:latest
+    env_file:
+      - .env
+    entrypoint: ["sv-ai-os"]
+    # Mount current project so audio files can be read/written via absolute container paths.
+    volumes:
+      - ./:/work
+    working_dir: /work
+    stdin_open: true
+    tty: true

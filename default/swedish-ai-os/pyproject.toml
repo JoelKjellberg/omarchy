@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "swedish-ai-os"
+version = "0.1.0"
+description = "Swedish-first speech and text assistant stack for Arch/Omarchy-like systems."
+requires-python = ">=3.11"
+dependencies = [
+  "openai>=1.60.0",
+  "python-dotenv>=1.0.0",
+  "requests>=2.32.0",
+]
+
+[project.optional-dependencies]
+local = [
+  "accelerate>=0.34.0",
+  "torch>=2.4.0",
+  "transformers>=4.45.0",
+]
+
+[project.scripts]
+sv-ai-os = "swedish_ai_os.pipeline:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
